@@ -1,84 +1,124 @@
-#include "studentheader.h"
+#include "student.h"
 
-void stud_del(void)
+void stud_del(ST **ptr)
 {
-    char ch, ans;
-    int roll;
-    char name[20];
+    ST *temp, *prv;
+    int num;
+    char ch, name[20];
+    int found;
 
-    ST *temp;
-    ST *prev;
-
-    printf("R: Delete by Roll\n");
-    printf("N: Delete by Name\n");
-
-    printf("Enter Choice: ");
+    printf("\nR/r : Delete by Roll Number");
+    printf("\nN/n : Delete by Name");
+    printf("\nEnter Your Choice : ");
     scanf(" %c", &ch);
 
-    if(ch == 'N')
+    switch(ch)
     {
-        printf("Enter Name: ");
-        scanf(" %[^\n]", name);
+        case 'R':
+        case 'r':
 
-        temp = hptr;
-
-        while(temp != NULL)
-        {
-            if(strcmp(temp->name, name) == 0)
+            if(*ptr == NULL)
             {
-                printf("Roll: %d Name: %s\n",
-                       temp->rollno, temp->name);
+                printf("List is Empty\n");
+                return;
             }
 
-            temp = temp->next;
-        }
+            printf("Enter Roll Number : ");
+            scanf("%d", &num);
 
-        printf("Enter Roll Number: ");
-        scanf("%d", &roll);
-    }
+            temp = *ptr;
+            prv = NULL;
 
-    else if(ch == 'R')
-    {
-        printf("Enter Roll Number: ");
-        scanf("%d", &roll);
-    }
+            while(temp)
+            {
+                if(temp->roll == num)
+                    break;
 
-    else
-    {
-        printf("Invalid Choice\n");
-        return;
-    }
+                prv = temp;
+                temp = temp->next;
+            }
+            if(temp == NULL)
+         	{
+    		printf("Record Not Found\n");
+    		return;
+		}
 
-    temp = hptr;
-    prev = NULL;
+		printf("\nRecord to be Deleted:\n");
+                    printf("Roll : %d\tName : %s\tPercentage : %.2f\n",temp->roll, temp->name, temp->per);
+		if(temp == *ptr)
+    			*ptr = temp->next;
+		else
+    			prv->next = temp->next;
 
-    while(temp != NULL)
-    {
-        if(temp->rollno == roll)
+		free(temp);
+
+		printf("\nRecord Deleted Successfully\n"); 
+                break;
+
+        case 'N':
+        case 'n':
+
+            if(*ptr == NULL)
+            {
+                printf("List is Empty\n");
+                return;
+            }
+
+            printf("Enter Name : ");
+            scanf("%s", name);
+
+            temp = *ptr;
+            found = 0;
+
+            while(temp)
+            {
+                if(strcmp(temp->name, name) == 0)
+                {
+                    printf("Roll : %d\tName : %s\tPercentage : %.2f\n",temp->roll, temp->name, temp->per);
+                    found = 1;
+                }
+
+                temp = temp->next;
+            }
+
+            if(found == 0)
+            {
+                printf("Name Not Found\n");
+                return;
+            }
+
+            printf("Enter Roll Number to Delete : ");
+            scanf("%d", &num);
+
+            temp = *ptr;
+            prv = NULL;
+
+            while(temp)
+            {
+                if(temp->roll == num && strcmp(temp->name, name) == 0)
+                    break;
+
+                prv = temp;
+                temp = temp->next;
+            }
+
+            if(temp == NULL)
+            {
+                printf("Record Not Found\n");
+                return;
+            }
+
+            if(temp == *ptr)
+                *ptr = temp->next;
+            else
+                prv->next = temp->next;
+
+            free(temp);
+
+            printf("Record Deleted Successfully\n");
             break;
 
-        prev = temp;
-        temp = temp->next;
-    }
-
-    if(temp == NULL)
-    {
-        printf("Record Not Found\n");
-        return;
-    }
-
-    printf("Are you sure you want to delete? (Y/N): ");
-    scanf(" %c", &ans);
-
-    if(ans == 'Y')
-    {
-        if(prev == NULL)
-            hptr = temp->next;
-        else
-            prev->next = temp->next;
-
-        free(temp);
-
-        printf("Record Deleted\n");
+        default:
+            printf("Invalid Choice\n");
     }
 }

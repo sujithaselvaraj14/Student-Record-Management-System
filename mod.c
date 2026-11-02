@@ -1,136 +1,195 @@
-#include "studentheader.h"
-void stud_mod(void)
+#include "student.h"
+
+void stud_mod(ST *ptr)
 {
-    ST *temp;
-    char ch, choice;
-    char name[30];
-    int roll, found;
-    float percentage;
+    ST *temp, *found = NULL;
+    int roll, new_roll, flag = 0;
+    float per;
+    char name[20];
+    char search_ch, mod_ch;
 
-    printf("R/r : Search by Roll\n");
-    printf("N/n : Search by Name\n");
-    printf("P/p : Search by Percentage\n");
+    printf("\n========== MODIFY RECORD ==========\n");
+    printf("R/r : Roll Number\n");
+    printf("N/n : Name\n");
+    printf("P/p : Percentage\n");
+    printf("Enter Your Choice : ");
+    scanf(" %c", &search_ch);
 
-    printf("Enter Choice: ");
-    scanf(" %c", &ch);
-
-    /* Search by Roll */
-    if(ch == 'R' || ch == 'r')
+    switch(search_ch)
     {
-        printf("Enter Roll: ");
-        scanf("%d", &roll);
-    }
+        /* Search by Roll Number */
+        case 'R':
+        case 'r':
 
-    /* Search by Name */
-    else if(ch == 'N' || ch == 'n')
-    {
-        printf("Enter Name: ");
-        scanf(" %[^\n]", name);
+            printf("Enter Roll Number : ");
+            scanf("%d", &roll);
 
-        found = 0;
-
-        for(temp = hptr; temp != NULL; temp = temp->next)
-        {
-            if(strcmp(temp->name, name) == 0)
+            temp = ptr;
+            while(temp)
             {
-                printf("Roll: %d  Name: %s  Percentage: %.2f\n",
-                       temp->rollno,
-                       temp->name,
-                       temp->percentage);
-
-                found = 1;
+                if(temp->roll == roll)
+                {
+                    found = temp;
+                    break;
+                }
+                temp = temp->next;
             }
-        }
-
-        if(found == 0)
-        {
-            printf("Record Not Found\n");
-            return;
-        }
-
-        printf("Enter Roll to Modify: ");
-        scanf("%d", &roll);
-    }
-
-    /* Search by Percentage */
-    else if(ch == 'P' || ch == 'p')
-    {
-        printf("Enter Percentage: ");
-        scanf("%f", &percentage);
-
-        found = 0;
-
-        for(temp = hptr; temp != NULL; temp = temp->next)
-        {
-            if(temp->percentage == percentage)
-            {
-                printf("Roll: %d  Name: %s  Percentage: %.2f\n",
-                       temp->rollno,
-                       temp->name,
-                       temp->percentage);
-
-                found = 1;
-            }
-        }
-
-        if(found == 0)
-        {
-            printf("Record Not Found\n");
-            return;
-        }
-
-        printf("Enter Roll to Modify: ");
-        scanf("%d", &roll);
-    }
-
-    else
-    {
-        printf("Invalid Choice\n");
-        return;
-    }
-
-    /* Find selected roll */
-    found = 0;
-
-    for(temp = hptr; temp != NULL; temp = temp->next)
-    {
-        if(temp->rollno == roll)
-        {
-            found = 1;
             break;
-        }
+
+        /* Search by Name */
+        case 'N':
+        case 'n':
+
+            printf("Enter Name : ");
+            scanf("%s", name);
+
+            printf("\nMatching Records\n");
+            printf("-------------------------------------------------\n");
+            printf("| Roll No | Name             | Percentage |\n");
+            printf("-------------------------------------------------\n");
+
+            temp = ptr;
+            while(temp)
+            {
+                if(strcmp(temp->name, name) == 0)
+                {
+                            printf("| %-7d | %-16s | %-10.2f |\n",temp->roll, temp->name, temp->per);
+                    flag = 1;
+                }
+                temp = temp->next;
+            }
+
+            printf("-------------------------------------------------\n");
+
+            if(flag == 0)
+            {
+                printf("No Matching Record Found\n");
+                return;
+            }
+
+            printf("Enter Roll Number to Modify : ");
+            scanf("%d", &roll);
+
+            temp = ptr;
+            while(temp)
+            {
+                if(temp->roll == roll)
+                {
+                    found = temp;
+                    break;
+                }
+                temp = temp->next;
+            }
+            break;
+
+        /* Search by Percentage */
+        case 'P':
+        case 'p':
+
+            printf("Enter Percentage : ");
+            scanf("%f", &per);
+
+            printf("\nMatching Records\n");
+            printf("-------------------------------------------------\n");
+            printf("| Roll No | Name             | Percentage |\n");
+            printf("-------------------------------------------------\n");
+
+            temp = ptr;
+            while(temp)
+            {
+                if(temp->per == per)
+                {
+                    printf("| %-7d | %-16s | %-10.2f |\n",
+                            temp->roll, temp->name, temp->per);
+                    flag = 1;
+                }
+                temp = temp->next;
+            }
+
+            printf("-------------------------------------------------\n");
+
+            if(flag == 0)
+            {
+                printf("No Matching Record Found\n");
+                return;
+            }
+
+            printf("Enter Roll Number to Modify : ");
+            scanf("%d", &roll);
+
+            temp = ptr;
+            while(temp)
+            {
+                if(temp->roll == roll)
+                {
+                    found = temp;
+                    break;
+                }
+                temp = temp->next;
+            }
+            break;
+
+        default:
+            printf("Invalid Choice\n");
+            return;
     }
 
-    if(found == 0)
+    if(found == NULL)
     {
         printf("Record Not Found\n");
         return;
     }
 
-    /* Modify Field */
-    printf("\nN/n : Name\n");
+    printf("\nModify Field\n");
+    printf("R/r : Roll Number\n");
+    printf("N/n : Name\n");
     printf("P/p : Percentage\n");
+    printf("Enter Your Choice : ");
+    scanf(" %c", &mod_ch);
 
-    printf("Enter Your Choice: ");
-    scanf(" %c", &choice);
-
-    if(choice == 'N' || choice == 'n')
+    switch(mod_ch)
     {
-        printf("Enter New Name: ");
-        scanf(" %[^\n]", temp->name);
+        /* Modify Roll Number */
+        case 'R':
+        case 'r':
+
+            printf("Enter New Roll Number : ");
+            scanf("%d", &new_roll);
+
+            temp = ptr;
+            while(temp)
+            {
+                if(temp->roll == new_roll && temp != found)
+                {
+                    printf("Roll Number Already Exists\n");
+                    return;
+                }
+                temp = temp->next;
+            }
+
+            found->roll = new_roll;
+            break;
+
+        /* Modify Name */
+        case 'N':
+        case 'n':
+
+            printf("Enter New Name : ");
+            scanf("%s", found->name);
+            break;
+
+        /* Modify Percentage */
+        case 'P':
+        case 'p':
+
+            printf("Enter New Percentage : ");
+            scanf("%f", &found->per);
+            break;
+
+        default:
+            printf("Invalid Choice\n");
+            return;
     }
 
-    else if(choice == 'P' || choice == 'p')
-    {
-        printf("Enter New Percentage: ");
-        scanf("%f", &temp->percentage);
-    }
-
-    else
-    {
-        printf("Invalid Choice\n");
-        return;
-    }
-
-    printf("Record Modified Successfully\n");
+    printf("\nRecord Modified Successfully...\n");
 }

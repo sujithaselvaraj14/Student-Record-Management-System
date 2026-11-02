@@ -1,27 +1,23 @@
-#include "studentheader.h"
+#include "student.h"
 
-void stud_show(void)
+void stud_show(ST *ptr)
 {
-    ST *temp;
-
-    if(hptr == NULL)
+    if(ptr == NULL)
     {
-        printf("No Records Available\n");
+        printf("No Records Found...\n");
         return;
     }
-    printf("_____________________________________\n");
-    printf("\nRoll No\t  Name\t\t Percentage\n");
-    printf("______________________________________\n");
 
-    temp = hptr;
+    printf("\n---------------------------------------\n");
+    printf("RollNo\tName\t\tPercentage\n");
+    printf("---------------------------------------\n");
 
-    while(temp != NULL)
+    while(ptr)
     {
-        printf("%d\t%s\t\t%.2f\n",
-               temp->rollno,
-               temp->name,
-               temp->percentage);
+        printf("%d\t%s\t\t%.2f\n",ptr->roll,ptr->name,ptr->per);
 
-        temp = temp->next;
+        ptr = ptr->next;
     }
+
+    printf("---------------------------------------\n");
 }
